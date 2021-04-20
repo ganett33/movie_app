@@ -1,7 +1,6 @@
 import React from "react";
 import axios from "axios";
-
-
+import Movie from "./Movie"
 
 //best way to use setState that not depends on that external state.
 class App extends React.Component {
@@ -10,7 +9,16 @@ class App extends React.Component {
     movies:[]
   };
   getMovies = async () => {
-    const movies = await axios.get("https://yts.mx/api/v2/list_movies.json");
+    const {
+      data: {
+        data :{movies}
+      }
+    } = await axios.get(
+      "https://yts.mx/api/v2/list_movies.json?sort_by=rating"
+    ); //sort by rating
+    
+    this.setState({ movies, isLoding: false }); // short version ({movies:movies})
+    
 
   }
   componentDidMount(){
@@ -18,10 +26,23 @@ class App extends React.Component {
       }
 
   render() {
-    const {isLoding} = this.state;
+    const { isLoding, movies } = this.state;
     return (
       <div>
-        {isLoding ? "Loading..." : "We are ready"}    
+        {isLoding 
+        ? "Loading..." 
+        : movies.map(movie => (
+              <Movie 
+                key ={movie.id}
+                id={movie.id}
+                year={movie.year}
+                title={movie.title}
+                summary={movie.summary}
+                poster={movie.medium_cover_image}
+               />
+            )
+          )
+        }      
       </div>
     );
   }
