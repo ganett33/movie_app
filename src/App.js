@@ -1,6 +1,7 @@
 import React from "react";
 import axios from "axios";
 import Movie from "./Movie"
+import"./App.css";
 
 //best way to use setState that not depends on that external state.
 class App extends React.Component {
@@ -28,22 +29,28 @@ class App extends React.Component {
   render() {
     const { isLoding, movies } = this.state;
     return (
-      <div>
+      <section className="container">
         {isLoding 
-        ? "Loading..." 
+        ? <div className="loader">
+          <span className="loader__text">Loading...</span>
+        </div> 
         : movies.map(movie => (
-              <Movie 
+          <div className="movies">
+            <Movie 
                 key ={movie.id}
                 id={movie.id}
                 year={movie.year}
                 title={movie.title}
                 summary={movie.summary}
                 poster={movie.medium_cover_image}
+                genres={movie.genres}
                />
+          </div>
+              
             )
           )
         }      
-      </div>
+      </section>
     );
   }
 }
